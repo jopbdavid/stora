@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { Logo } from "../components";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, registerUser } from "../features/user/userSlicer";
 
 const Register = () => {
   //Inicializar state values locais
@@ -14,6 +16,8 @@ const Register = () => {
   //Gestir valores de login em conjunto e atualizar no store redux
   const [values, setValues] = useState(initialState);
   //Inicializar store para acesso valores de estado global
+  const dispatch = useDispatch();
+  const { isLoading, user } = useSelector((store) => store.user);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -23,6 +27,18 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { name, email, password, isMember } = values;
+    if (!email || !password || (!name && !isMember)) {
+      toast.error("Please fill out all the requested fields");
+      return;
+    }
+    if (isMember) {
+      dispatch(loginUser({ email: email, password: password }));
+      return;
+    } else {
+      dispatch(registerUser({ name: name, email: email, password: password }));
+      return;
+    }
   };
   const handleClick = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -30,7 +46,7 @@ const Register = () => {
 
   return (
     <Wrapper className="full-page">
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <Logo />
         {values.isMember ? <h3>Login</h3> : <h3>Register</h3>}
         {!values.isMember && (
@@ -71,9 +87,9 @@ const Register = () => {
             onChange={handleChange}
           />
         </div>
-        <button className="btn btn-block" type="submit" onSubmit={handleSubmit}>
+        <button className="btn btn-block" type="submit">
           {" "}
-          Submit{" "}
+          {!isLoading ? "Submit" : "Loading..."}{" "}
         </button>
         {values.isMember ? (
           <p>
