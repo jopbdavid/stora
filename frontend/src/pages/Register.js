@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { Logo } from "../components";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser } from "../features/user/userSlicer";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   //Inicializar state values locais
@@ -18,6 +19,15 @@ const Register = () => {
   //Inicializar store para acesso valores de estado global
   const dispatch = useDispatch();
   const { isLoading, user } = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  //Redirect to home page se utilizador existente
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const value = e.target.value;

@@ -4,12 +4,16 @@ import {
   registerUserThunk,
   updateUserThunk,
 } from "./userThunk";
-import { addUserToLocalStorage } from "../../utils/localStorage";
+import {
+  addUserToLocalStorage,
+  getUserFromLocalStorage,
+} from "../../utils/localStorage";
 import { toast } from "react-toastify";
 
 const initialState = {
   isLoading: false,
-  user: "",
+  user: getUserFromLocalStorage(),
+  isSideBarOpen: false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -36,7 +40,11 @@ export const updateUser = createAsyncThunk(
 const userSlicer = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    toggleSideBar: (state) => {
+      return { ...state, isSideBarOpen: !state.isSideBarOpen };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -57,6 +65,7 @@ const userSlicer = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.isLoading = false;
         state.user = action.payload;
         addUserToLocalStorage(action.payload);
@@ -69,4 +78,5 @@ const userSlicer = createSlice({
   },
 });
 
+export const { toggleSideBar } = userSlicer.actions;
 export default userSlicer.reducer;

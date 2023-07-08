@@ -5,8 +5,11 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const connectDB = require("./db/connect");
-const authRouter = require("./routes/auth");
 const cors = require("cors");
+
+//routes
+const authRouter = require("./routes/auth");
+const classRouter = require("./routes/class");
 
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "./frontend/public")));
@@ -18,6 +21,7 @@ app.get("/", (req, res) => {
 
 //routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/class", classRouter);
 
 const port = process.env.PORT || 5000;
 

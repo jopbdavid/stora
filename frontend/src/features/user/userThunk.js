@@ -2,8 +2,9 @@ import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
 export const loginUserThunk = async (url, user, thunkAPI) => {
   try {
-    const { data } = await customFetch.get(url, user);
-    const userData = data.user;
+    const { data } = await customFetch.post(url, user);
+    const userData = data.user[0];
+    console.log(userData);
     return userData;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
