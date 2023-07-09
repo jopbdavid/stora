@@ -20,29 +20,17 @@ const AddClass = () => {
   const handleClear = () => {};
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !year || !classProfessor || !letter) {
+    if (!year || !classProfessor || !letter) {
       toast.error("Please fill out all the fields");
       return;
     }
-    dispatch(addClass({ name, year, letter, classProfessor }));
+    dispatch(addClass({ year, letter, classProfessor }));
   };
   return (
     <Wrapper>
       <form className="form" onSubmit={handleSubmit}>
         <h3>{isEditing ? "Edit class" : "Add class"}</h3>
         <div className="form-center">
-          <div className="form-row">
-            <label htmlFor="name" className="form-label">
-              Nome:
-            </label>
-            <input
-              type="text"
-              name="name"
-              values={name}
-              onChange={handleChange}
-              className="form-input"
-            />
-          </div>
           <div className="form-row">
             <label htmlFor="year" className="form-label">
               Year:

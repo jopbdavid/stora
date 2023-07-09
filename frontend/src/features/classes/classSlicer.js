@@ -25,7 +25,6 @@ export const deleteClass = createAsyncThunk(
 
 const initialState = {
   isLoading: false,
-  name: "",
   year: "",
   letter: "",
   classProfessor: "",

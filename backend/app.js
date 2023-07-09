@@ -10,6 +10,9 @@ const cors = require("cors");
 //routes
 const authRouter = require("./routes/auth");
 const classRouter = require("./routes/class");
+//error handler
+const notFoundMiddleWare = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
 
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "./frontend/public")));
@@ -22,6 +25,9 @@ app.get("/", (req, res) => {
 //routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/class", classRouter);
+
+app.use(notFoundMiddleWare);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 

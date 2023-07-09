@@ -1,21 +1,23 @@
 const mongoose = require("mongoose");
+const { BadRequestError } = require("../errors");
 
 const classSchema = new mongoose.Schema({
   name: {
     type: String,
-    trim: true,
-    required: [true, "Please provide class name"],
-    maxlength: 5,
-    minlength: 1,
+    unique: true,
+    sparse: true,
   },
   year: {
-    type: String,
-    required: [true, "Please provide email"],
-    enum: ["5º", "6º", "7º", "8º", "9º"],
+    type: Number,
+    required: [true, "Please provide year"],
+    enum: [5, 6, 7, 8, 9],
+    default: 5,
   },
   letter: {
     type: String,
     required: [true, "Please provide letter"],
+    enum: ["A", "B", "C", "D", "E", "F", "G"],
+    default: "A",
     maxlength: 1,
   },
   classProfessor: {
@@ -24,6 +26,27 @@ const classSchema = new mongoose.Schema({
     trim: true,
     maxlength: 20,
   },
+  students: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Student",
+    },
+  ],
+});
+
+classSchema.pre("save", async function (next) {
+  if (!this.isNew) {
+    this.name = `${this.year}º${this.letter}`;
+    return next();
+  }
+  this.name = `${this.year}º${this.letter}`;
+  const existingClass = await mongoose
+    .model("Class")
+    .findOne({ name: this.name });
+  if (existingClass) {
+    throw new BadRequestError("Class already exists.");
+  }
+  next();
 });
 
 module.exports = mongoose.model("Class", classSchema);
