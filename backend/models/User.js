@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema({
     maxlength: 20,
     default: "my city",
   },
+  classes: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Class",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

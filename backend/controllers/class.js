@@ -45,4 +45,15 @@ const deleteClass = async (req, res) => {
 };
 //________________________________________________
 
-module.exports = { addClass, editClass, deleteClass };
+//________________________________________________
+//GET ALL CLASS CONTROLLER____________________________
+const getAllClasses = async (req, res) => {
+  const classes = await Class.find({});
+  if (!classes) {
+    throw new NotFoundError("No classes found.");
+  }
+  res.status(StatusCodes.OK).json({ classes });
+};
+//_____________________________________________________
+
+module.exports = { addClass, editClass, deleteClass, getAllClasses };

@@ -10,6 +10,7 @@ const cors = require("cors");
 //routes
 const authRouter = require("./routes/auth");
 const classRouter = require("./routes/class");
+const studentRouter = require("./routes/student");
 //error handler
 const notFoundMiddleWare = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 //routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/class", classRouter);
+app.use("/api/v1/student", studentRouter);
 
 app.use(notFoundMiddleWare);
 app.use(errorHandlerMiddleware);

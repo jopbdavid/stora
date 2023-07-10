@@ -9,7 +9,7 @@ const classSchema = new mongoose.Schema({
   },
   year: {
     type: Number,
-    required: [true, "Please provide year"],
+    required: [true, "Please provide year/grade"],
     enum: [5, 6, 7, 8, 9],
     default: 5,
   },
@@ -32,6 +32,7 @@ const classSchema = new mongoose.Schema({
       ref: "Student",
     },
   ],
+  teachers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
 });
 
 classSchema.pre("save", async function (next) {
