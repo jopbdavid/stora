@@ -52,7 +52,8 @@ const getAllClasses = async (req, res) => {
   if (!classes) {
     throw new NotFoundError("No classes found.");
   }
-  res.status(StatusCodes.OK).json({ classes });
+  const totalClasses = classes.length;
+  res.status(StatusCodes.OK).json({ classes, totalClasses });
 };
 //_____________________________________________________
 

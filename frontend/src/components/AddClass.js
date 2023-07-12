@@ -13,7 +13,7 @@ const AddClass = () => {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name, value);
+
     dispatch(handleClassInput({ name, value }));
   };
 
@@ -41,12 +41,14 @@ const AddClass = () => {
               values={year}
               className="form-select"
               onChange={handleChange}
+              defaultValue=""
             >
-              <option value="5º">5º grade</option>
-              <option value="6º">6º grade</option>
-              <option value="7º">7º grade</option>
-              <option value="8º">8º grade</option>
-              <option value="9º">9º grade</option>
+              <option value=""></option>
+              <option value={5}>5º grade</option>
+              <option value={6}>6º grade</option>
+              <option value={7}>7º grade</option>
+              <option value={8}>8º grade</option>
+              <option value={9}>9º grade</option>
             </select>
           </div>
           <div className="form-row">

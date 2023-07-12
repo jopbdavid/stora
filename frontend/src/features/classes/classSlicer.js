@@ -53,6 +53,7 @@ const classSlicer = createSlice({
       })
       .addCase(addClass.rejected, (state, action) => {
         state.isLoading = false;
+
         toast.error(action.payload);
       })
       .addCase(deleteClass.pending, (state) => {})

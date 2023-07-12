@@ -1,8 +1,8 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
-export const addStudentThunk = async (url, classData, thunkAPI) => {
+export const addStudentThunk = async (url, studentData, thunkAPI) => {
   try {
-    const { data } = await customFetch.post(url, classData);
+    const { data } = await customFetch.post(url, studentData);
     console.log(data);
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
@@ -17,9 +17,9 @@ export const deleteStudentThunk = async (url, thunkAPI) => {
   }
 };
 
-export const editStudentThunk = async (url, job, thunkAPI) => {
+export const editStudentThunk = async (url, studentData, thunkAPI) => {
   try {
-    const data = await customFetch.patch(url, job);
+    const data = await customFetch.patch(url, studentData);
     console.log(data);
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);

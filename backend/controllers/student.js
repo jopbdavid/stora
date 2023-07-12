@@ -29,7 +29,7 @@ const addStudent = async (req, res) => {
 //________________________________________________
 //GET STUDENT CONTROLLER____________________________
 const getStudent = async (req, res) => {
-  const student = await Student.findOne({ email: req.body.email });
+  const student = await Student.findOne({ _id: req.params.id });
   if (!student) {
     throw new NotFoundError("Student not found.");
   }
@@ -47,9 +47,36 @@ const editStudent = async (req, res) => {
     throw new NotFoundError("Student not found.");
   }
 
-  const updatedStudent = await Student.updateStudent(studentToUpdate, req.body);
+  const originalClass = await Class.findOne({
+    _id: studentToUpdate.studentClass,
+  });
 
-  res.status(StatusCodes.OK).json({ updatedStudent });
+  const { studentClass, ...updatedFields } = req.body;
+  const updatedStudent = await Student.updateStudent(
+    studentToUpdate,
+    updatedFields
+  );
+
+  if (studentClass) {
+    const newClass = await Class.findOne({ _id: studentClass });
+
+    if (!originalClass || !newClass) {
+      throw new NotFoundError("Class not found.");
+    }
+
+    originalClass.students.pull(updatedStudent._id);
+    newClass.students.addToSet(updatedStudent._id);
+
+    originalClass.markModified("students");
+    newClass.markModified("students");
+
+    await Promise.all([originalClass.save(), newClass.save()]);
+    studentToUpdate.studentClass = newClass._id;
+    studentToUpdate.studentClassName = newClass.name;
+  }
+  Object.assign(studentToUpdate, updatedFields);
+  await studentToUpdate.save();
+  res.status(StatusCodes.OK).json({ updatedStudent: studentToUpdate });
 };
 //________________________________________________
 
@@ -61,7 +88,7 @@ const deleteStudent = async (req, res) => {
   if (!studentToDelete) {
     throw new NotFoundError("Student not found.");
   }
-  const deleteStudent = await Student.findOneAndDelete({ _id: id });
+  const deleteStudent = await Student.deleteOne({ _id: id });
   res.status(StatusCodes.OK).json({ msg: "Student deleted." });
 };
 //________________________________________________

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getAllClassesThunk } from "./getAllClassesThunk";
+import { getAllStudentsThunk } from "./getAllStudentsThunk";
 
 const initialFiltersState = {
   search: "",
@@ -12,22 +12,22 @@ const initialFiltersState = {
 
 const initialState = {
   isLoading: false,
-  classes: [],
-  totalClasses: 0,
+  students: [],
+  totalStudents: 0,
   numOfPages: 1,
   page: 1,
   ...initialFiltersState,
 };
 
-export const getAllClasses = createAsyncThunk(
-  "class/getAllClasses",
+export const getAllStudents = createAsyncThunk(
+  "student/getAllStudents",
   async (_, thunkAPI) => {
-    return getAllClassesThunk(_, thunkAPI);
+    return getAllStudentsThunk(_, thunkAPI);
   }
 );
 
-const allClassesSlicer = createSlice({
-  name: "allClasses",
+const allStudentsSlicer = createSlice({
+  name: "allStudents",
   initialState,
   reducers: {
     showLoading: (state) => {
@@ -59,18 +59,18 @@ const allClassesSlicer = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(getAllClasses.pending, (state) => {
+      .addCase(getAllStudents.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(
-        getAllClasses.fulfilled,
-        (state, { payload: { classes, totalClasses } }) => {
+        getAllStudents.fulfilled,
+        (state, { payload: { students, totalStudents } }) => {
           state.isLoading = false;
-          state.classes = classes;
-          state.totalClasses = totalClasses;
+          state.students = students;
+          state.totalStudents = totalStudents;
         }
       )
-      .addCase(getAllClasses.rejected, (state, action) => {
+      .addCase(getAllStudents.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload);
       }),
@@ -85,5 +85,5 @@ export const {
   changePrev,
   changeNext,
   activePage,
-} = allClassesSlicer.actions;
-export default allClassesSlicer.reducer;
+} = allStudentsSlicer.actions;
+export default allStudentsSlicer.reducer;

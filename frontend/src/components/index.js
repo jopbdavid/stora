@@ -5,5 +5,17 @@ import NavLinks from "./NavLinks";
 import Navbar from "./Navbar";
 import SideBar from "./SideBar";
 import Loading from "./Loading";
+import StudentContainer from "./StudentContainer";
+import AddStudent from "./AddStudent";
 
-export { Logo, Navbar, SideBar, NavLinks, AddClass, ClassesContainer, Loading };
+export {
+  Logo,
+  Navbar,
+  SideBar,
+  NavLinks,
+  AddClass,
+  ClassesContainer,
+  Loading,
+  StudentContainer,
+  AddStudent,
+};

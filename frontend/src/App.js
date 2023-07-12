@@ -8,6 +8,7 @@ import Classes from "./pages/dashboard/Classes";
 import Grades from "./pages/dashboard/Grades";
 import Profile from "./pages/dashboard/Profile";
 import Stats from "./pages/dashboard/Stats";
+import Students from "./pages/dashboard/Students";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         >
           <Route index element={<Stats />} />
           <Route path="classes" element={<Classes />} />
+          <Route path="students" element={<Students />} />
           <Route path="grades" element={<Grades />} />
           <Route path="profile" element={<Profile />} />
         </Route>

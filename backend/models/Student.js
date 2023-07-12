@@ -64,27 +64,57 @@ const studentSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    photo: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
 studentSchema.pre("save", async function (next) {
-  if (this.isNew) {
-    const classObj = await mongoose
-      .model("Class")
-      .findOne({ _id: this.studentClass });
-    if (!classObj) {
-      throw new NotFoundError("Class not found.");
+  if (this.isNew || this.isModified("studentClass")) {
+    const originalStudentClass = this.isNew
+      ? null
+      : await this.constructor.findOne({ _id: this._id });
+    const originalClassId = originalStudentClass
+      ? originalStudentClass.studentClass
+      : null;
+    const newClassId = this.studentClass;
+
+    if (
+      originalClassId &&
+      newClassId &&
+      originalClassId.toString() !== newClassId.toString()
+    ) {
+      const originalClass = await Class.findOne({ _id: originalClassId });
+      const newClass = await Class.findOne({ _id: newClassId });
+
+      if (!originalClass || !newClass) {
+        throw new NotFoundError("Class not found.");
+      }
+      originalClass.students.pull(this._id);
+      newClass.students.addToSet(this._id);
+
+      originalClass.markModified("students");
+      newClass.markModified("students");
+
+      await Promise.all([originalClass.save(), newClass.save()]);
     }
-    this.studentClassName = classObj.name;
-    classObj.students.push(this._id);
-    classObj.markModified("students");
-    await classObj.save();
+
+    if (newClassId) {
+      const classObj = await Class.findOne({ _id: newClassId });
+      if (!classObj) {
+        throw new NotFoundError("Class not found.");
+      }
+      this.studentClassName = classObj.name;
+    } else {
+      this.studentClassName = "";
+    }
   }
   next();
 });
 
-studentSchema.post("findOneAndDelete", async function (doc, next) {
+studentSchema.post("deleteOne", async function (doc, next) {
   const classObj = await mongoose
     .model("Class")
     .findOne({ _id: doc.studentClass });
@@ -127,29 +157,6 @@ studentSchema.statics.updateStudent = async function (
   studentToUpdate.guardianContact =
     guardianContact || studentToUpdate.guardianContact;
 
-  if (
-    studentClass &&
-    studentClass.toString() !== studentToUpdate.studentClass.toString()
-  ) {
-    const originalClass = await Class.findOne({
-      _id: studentToUpdate.studentClass,
-    });
-    const newClass = await Class.findOne({ _id: studentClass });
-    if (!originalClass || !newClass) {
-      throw new NotFoundError("Class not found.");
-    }
-
-    originalClass.students.pull(studentToUpdate._id);
-
-    if (!newClass.students.includes(studentToUpdate._id)) {
-      newClass.students.push(studentToUpdate._id);
-    }
-
-    originalClass.markModified("students");
-    newClass.markModified("students");
-
-    await Promise.all([originalClass.save(), newClass.save()]);
-  }
   studentToUpdate.studentClass = studentClass;
   return studentToUpdate;
 };

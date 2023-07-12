@@ -3,44 +3,55 @@ import {
   addStudentThunk,
   editStudentThunk,
   deleteStudentThunk,
-} from "./classThunk";
+} from "./studentsThunk.js";
 import { toast } from "react-toastify";
 
 export const addStudent = createAsyncThunk(
-  "class/addStudent",
-  async (url, classData, thunkAPI) => {
-    return addStudentThunk(url, classData, thunkAPI);
+  "student/addStudent",
+  async (studentData, thunkAPI) => {
+    return addStudentThunk("/student", studentData, thunkAPI);
   }
 );
 
 export const editStudent = createAsyncThunk(
-  "class/editStudent",
-  async (url, classData, thunkAPI) => {
-    return editStudentThunk(url, classData, thunkAPI);
+  "student/editStudent",
+  async (studentData, thunkAPI) => {
+    return editStudentThunk("/student", studentData, thunkAPI);
   }
 );
 
 export const deleteStudent = createAsyncThunk(
-  "class/deleteStudent",
-  async (url, classData, thunkAPI) => {
-    return deleteStudentThunk(url, classData, thunkAPI);
+  "student/deleteStudent",
+  async (studentData, thunkAPI) => {
+    return deleteStudentThunk("/student", studentData, thunkAPI);
   }
 );
 
 const initialState = {
   isLoading: false,
-  name: "",
-  age: "",
-  address: "",
-  class: [],
-  special: false,
   isEditing: false,
+  firstName: "",
+  LastName: "",
+  dateOfBirth: "",
+  gender: "",
+  address: "",
+  email: "",
+  guardianName: "",
+  guardianContact: null,
+  year: null,
+  className: "",
+  photo: "",
 };
 
 const studentsSlicer = createSlice({
   name: "students",
   initialState,
-  reducers: {},
+  reducers: {
+    handleStudentInput: (state, action) => {
+      const { name, value } = action.payload;
+      return { ...state, [name]: value };
+    },
+  },
   extraReducers: (builder) =>
     builder
       .addCase(addStudent.pending, (state) => {
@@ -73,4 +84,5 @@ const studentsSlicer = createSlice({
       }),
 });
 
+export const { handleStudentInput } = studentsSlicer.actions;
 export default studentsSlicer.reducer;

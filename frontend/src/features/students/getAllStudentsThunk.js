@@ -1,18 +1,17 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
+import { hideLoading } from "./allStudentsSlicer";
 
-import { hideLoading } from "./allClassesSlicer";
-
-export const getAllClassesThunk = async (_, thunkAPI) => {
+export const getAllStudentsThunk = async (_, thunkAPI) => {
   // const { searchStatus, searchType, sort, search, page } =
   //   thunkAPI.getState().allClasses;
   // let url = `/class?status=${searchStatus}&sort=${sort}&page=${page}`;
   // if (search) {
   //   url = `/class?status=${searchStatus}&sort=${sort}&page=${page}&search=${search}`;
   // }
-  let url = "/class";
+  let url = "/student";
   try {
     const { data } = await customFetch.get(url);
-
+    console.log(data);
     return data;
   } catch (error) {
     thunkAPI.dispatch(hideLoading());
