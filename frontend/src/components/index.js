@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import SideBar from "./SideBar";
 import Loading from "./Loading";
 import StudentContainer from "./StudentContainer";
-import AddStudent from "./AddStudent";
+import AddStudent from "../pages/dashboard/AddStudent";
 
 export {
   Logo,

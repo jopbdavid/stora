@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/StudentContainer";
 import Student from "./Student";
 import { getAllStudents } from "../features/students/allStudentsSlicer";
+
 const StudentContainer = () => {
   const { isLoading, students, totalStudents, numOfPages, page } = useSelector(
     (store) => store.allStudents
@@ -28,15 +29,17 @@ const StudentContainer = () => {
 
   return (
     <Wrapper>
-      <h5>
-        {totalStudents} Student{students.length > 1 && "s"} found
-      </h5>
-      <div className="students">
-        {students.map((item) => {
-          return <Student key={item._id} {...item} />;
-        })}
-      </div>
-      {/* {numOfPages > 1 && <PageBtnContainer />} */}
+      <>
+        <h5>
+          {totalStudents} Student{students.length > 1 && "s"} found
+        </h5>
+        <div className="students">
+          {students.map((item) => {
+            return <Student key={item._id} {...item} />;
+          })}
+        </div>
+        {/* {numOfPages > 1 && <PageBtnContainer />} */}
+      </>
     </Wrapper>
   );
 };

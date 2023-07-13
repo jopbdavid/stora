@@ -11,7 +11,9 @@ const getAllStudents = async (req, res) => {
   if (students.length < 1) {
     throw new NotFoundError("No students found.");
   }
-  res.status(StatusCodes.OK).json({ students });
+  res
+    .status(StatusCodes.OK)
+    .json({ students: students, totalStudents: students.length });
 };
 //_____________________________________________________
 

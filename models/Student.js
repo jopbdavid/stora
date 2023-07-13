@@ -62,11 +62,12 @@ const studentSchema = new mongoose.Schema(
     studentClass: {
       type: mongoose.Types.ObjectId,
       ref: "Class",
-      required: [true, "Please provide class"],
     },
     studentClassName: {
-      type: String,
+      type: mongoose.Schema.Types.String,
+      ref: "Class",
       unique: true,
+      required: [true, "Please provide class"],
     },
     photo: {
       type: String,
