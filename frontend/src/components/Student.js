@@ -31,11 +31,11 @@ const Student = ({
           </div>
 
           <div className="info">
-            <h4>
+            <h5>
               <b>
                 {firstName} {lastName}
               </b>
-            </h4>
+            </h5>
             <h5>{studentClassName}</h5>
           </div>
         </header>
@@ -54,6 +54,14 @@ const Student = ({
               <b>Email: </b>
               {email}
             </p>
+            {/* <div className="actions">
+              <Link to="/add-job" className="btn edit-btn" onClick="">
+                Edit
+              </Link>
+              <button type="button" className="btn delete-btn" onClick="">
+                Delete
+              </button>
+            </div> */}
           </div>
         </div>
         <footer>
