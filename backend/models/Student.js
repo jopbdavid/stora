@@ -19,8 +19,12 @@ const studentSchema = new mongoose.Schema(
       minlength: 3,
     },
     dateOfBirth: {
-      type: Date,
+      type: String,
       required: [true, "Please provide a date of birth"],
+      match: [
+        /^(\d{2})\/(\d{2})\/(\d{4})$/,
+        "Date of birth must be in the format dd/mm/yyyy.",
+      ],
     },
     gender: {
       type: String,
@@ -72,37 +76,42 @@ const studentSchema = new mongoose.Schema(
 );
 
 studentSchema.pre("save", async function (next) {
-  if (this.isNew || this.isModified("studentClass")) {
-    const originalStudentClass = this.isNew
-      ? null
-      : await this.constructor.findOne({ _id: this._id });
-    const originalClassId = originalStudentClass
-      ? originalStudentClass.studentClass
-      : null;
-    const newClassId = this.studentClass;
+  if (this.isModified("studentClass")) {
+    const originalStudentClass = this.studentClass;
+    const newStudentClass = this.studentClass;
+
+    console.log("Original Class ID:", originalStudentClass);
+    console.log("New Class ID:", newStudentClass);
 
     if (
-      originalClassId &&
-      newClassId &&
-      originalClassId.toString() !== newClassId.toString()
+      originalStudentClass &&
+      newStudentClass &&
+      originalStudentClass.toString() !== newStudentClass.toString()
     ) {
-      const originalClass = await Class.findOne({ _id: originalClassId });
-      const newClass = await Class.findOne({ _id: newClassId });
+      const originalClass = await Class.findOne({ _id: originalStudentClass });
+      const newClass = await Class.findOne({ _id: newStudentClass });
+
+      console.log("Original Class:", originalClass);
+      console.log("New Class:", newClass);
 
       if (!originalClass || !newClass) {
         throw new NotFoundError("Class not found.");
       }
+
       originalClass.students.pull(this._id);
       newClass.students.addToSet(this._id);
 
       originalClass.markModified("students");
       newClass.markModified("students");
 
-      await Promise.all([originalClass.save(), newClass.save()]);
+      await Promise.all([
+        originalClass.save({ runValidators: false }),
+        newClass.save({ runValidators: false }),
+      ]);
     }
 
-    if (newClassId) {
-      const classObj = await Class.findOne({ _id: newClassId });
+    if (newStudentClass) {
+      const classObj = await Class.findOne({ _id: newStudentClass });
       if (!classObj) {
         throw new NotFoundError("Class not found.");
       }
@@ -156,8 +165,10 @@ studentSchema.statics.updateStudent = async function (
   studentToUpdate.guardianName = guardianName || studentToUpdate.guardianName;
   studentToUpdate.guardianContact =
     guardianContact || studentToUpdate.guardianContact;
-
-  studentToUpdate.studentClass = studentClass;
+  if (studentClass) {
+    studentToUpdate.studentClass = studentClass;
+    await studentToUpdate.save({ validateBeforeSave: false });
+  }
   return studentToUpdate;
 };
 
