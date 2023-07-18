@@ -18,6 +18,20 @@ const getAllStudents = async (req, res) => {
 //_____________________________________________________
 
 //________________________________________________
+//GET STUDENTSLIST BY ID CONTROLLER____________________________
+const getStudentsList = async (req, res) => {
+  const studentsIds = req.body;
+  const students = await Student.find({ _id: { $in: studentsIds } });
+  if (students.length < 1) {
+    throw new NotFoundError("No students found.");
+  }
+  res
+    .status(StatusCodes.OK)
+    .json({ students: students, totalStudents: students.length });
+};
+//_____________________________________________________
+
+//________________________________________________
 //ADD STUDENT CONTROLLER____________________________
 const addStudent = async (req, res) => {
   const checkMail = await Student.findOne({ email: req.body.email });
@@ -44,76 +58,62 @@ const getStudent = async (req, res) => {
 //________________________________________________
 //EDIT STUDENT CONTROLLER____________________________
 const editStudent = async (req, res) => {
-  const { id } = req.params;
-  const studentToUpdate = await Student.findOne({ _id: id });
-  if (!studentToUpdate) {
-    throw new NotFoundError("Student not found.");
-  }
-
-  const originalClass = await Class.findOne({
-    _id: studentToUpdate.studentClass,
-  });
-
-  const { studentClass, ...updatedFields } = req.body;
-
-  // Remove the studentClass field from updatedFields
-  delete updatedFields.studentClass;
-
-  const updatedStudentClass = studentClass
-    ? mongoose.Types.ObjectId(studentClass)
-    : studentToUpdate.studentClass;
-
-  const updateOptions = { runValidators: false }; // Turn off runValidators option
-
-  await Student.findOneAndUpdate(
-    { _id: studentToUpdate._id },
-    { $set: { ...updatedFields, studentClass: updatedStudentClass } },
-    updateOptions
-  );
-
-  if (studentClass) {
-    const newClass = await Class.findOne({ _id: studentClass });
-
-    // if (!originalClass || !newClass) {
-    //   throw new NotFoundError("Class not found.");
-    // }
-
-    if (studentToUpdate.studentClass) {
-      originalClass.students.pull(studentToUpdate._id);
-      originalClass.markModified("students");
-      await originalClass.save();
-    }
-
-    if (
-      studentToUpdate.studentClass &&
-      studentToUpdate.studentClass.toString() !== newClass._id.toString()
-    ) {
-      newClass.students.addToSet(studentToUpdate._id);
-      newClass.markModified("students");
-      await newClass.save();
-    } else if (!studentToUpdate.studentClass) {
-      newClass.students.addToSet(studentToUpdate._id);
-      newClass.markModified("students");
-      await newClass.save();
-    }
-
-    studentToUpdate.studentClass = updatedStudentClass;
-    studentToUpdate.studentClassName = newClass.name;
-  } else {
-    if (studentToUpdate.studentClass) {
-      originalClass.students.pull(studentToUpdate._id);
-      originalClass.markModified("students");
-      await originalClass.save();
-
-      studentToUpdate.studentClass = null;
-      studentToUpdate.studentClassName = null;
-    }
-  }
-
-  await studentToUpdate.save({ validateBeforeSave: false });
-  Object.assign(studentToUpdate, updatedFields);
-
-  res.status(StatusCodes.OK).json({ updatedStudent: studentToUpdate });
+  // const { id } = req.params;
+  // const studentToUpdate = await Student.findOne({ _id: id });
+  // if (!studentToUpdate) {
+  //   throw new NotFoundError("Student not found.");
+  // }
+  // const originalClass = await Class.findOne({
+  //   _id: studentToUpdate.studentClass,
+  // });
+  // const { studentClass, ...updatedFields } = req.body;
+  // // Remove the studentClass field from updatedFields
+  // delete updatedFields.studentClass;
+  // const updatedStudentClass = studentClass
+  //   ? mongoose.Types.ObjectId(studentClass)
+  //   : studentToUpdate.studentClass;
+  // const updateOptions = { runValidators: false }; // Turn off runValidators option
+  // await Student.findOneAndUpdate(
+  //   { _id: studentToUpdate._id },
+  //   { $set: { ...updatedFields, studentClass: updatedStudentClass } },
+  //   updateOptions
+  // );
+  // if (studentClass) {
+  //   const newClass = await Class.findOne({ _id: studentClass });
+  //   // if (!originalClass || !newClass) {
+  //   //   throw new NotFoundError("Class not found.");
+  //   // }
+  //   if (studentToUpdate.studentClass) {
+  //     originalClass.students.pull(studentToUpdate._id);
+  //     originalClass.markModified("students");
+  //     await originalClass.save();
+  //   }
+  //   if (
+  //     studentToUpdate.studentClass &&
+  //     studentToUpdate.studentClass.toString() !== newClass._id.toString()
+  //   ) {
+  //     newClass.students.addToSet(studentToUpdate._id);
+  //     newClass.markModified("students");
+  //     await newClass.save();
+  //   } else if (!studentToUpdate.studentClass) {
+  //     newClass.students.addToSet(studentToUpdate._id);
+  //     newClass.markModified("students");
+  //     await newClass.save();
+  //   }
+  //   studentToUpdate.studentClass = updatedStudentClass;
+  //   studentToUpdate.studentClassName = newClass.name;
+  // } else {
+  //   if (studentToUpdate.studentClass) {
+  //     originalClass.students.pull(studentToUpdate._id);
+  //     originalClass.markModified("students");
+  //     await originalClass.save();
+  //     studentToUpdate.studentClass = null;
+  //     studentToUpdate.studentClassName = null;
+  //   }
+  // }
+  // await studentToUpdate.save({ validateBeforeSave: false });
+  // Object.assign(studentToUpdate, updatedFields);
+  // res.status(StatusCodes.OK).json({ updatedStudent: studentToUpdate });
 };
 
 //________________________________________________
@@ -137,4 +137,5 @@ module.exports = {
   editStudent,
   deleteStudent,
   getStudent,
+  getStudentsList,
 };

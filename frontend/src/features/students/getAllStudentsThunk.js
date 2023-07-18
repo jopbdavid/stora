@@ -19,8 +19,10 @@ export const getAllStudentsThunk = async (_, thunkAPI) => {
   }
 };
 
-export const getStudentsThunk = async (ids, thunkAPI) => {
+export const getStudentsThunk = async (studentsIds, thunkAPI) => {
+  let url = "/student";
   try {
+    const { data } = await customFetch.get(url, studentsIds);
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }

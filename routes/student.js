@@ -6,10 +6,11 @@ const {
   editStudent,
   deleteStudent,
   getStudent,
+  getStudentsList,
 } = require("../controllers/student");
 const Student = require("../models/Student");
 
-router.route("/").get(getAllStudents).post(addStudent);
+router.route("/").get(getAllStudents).post(addStudent).get(getStudentsList);
 router.route("/:id").patch(editStudent).delete(deleteStudent).get(getStudent);
 
 module.exports = router;

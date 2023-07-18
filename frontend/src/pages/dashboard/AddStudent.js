@@ -19,8 +19,7 @@ const AddStudent = () => {
     email,
     guardianName,
     guardianContact,
-    year,
-    studentClassName,
+    className,
     photo,
     guardianEmail,
   } = useSelector((store) => store.students);
@@ -52,7 +51,7 @@ const AddStudent = () => {
       !guardianContact ||
       !guardianEmail ||
       !guardianName ||
-      !studentClassName
+      !className
     ) {
       toast.error("Please fill out all the fields");
       return;
@@ -67,7 +66,7 @@ const AddStudent = () => {
       guardianContact,
       guardianEmail,
       guardianName,
-      studentClassName,
+      className,
     };
     dispatch(addStudent(newStudent));
   };
@@ -105,13 +104,13 @@ const AddStudent = () => {
               />
             </div>
             <div className="form-row">
-              <label htmlFor="studentClassName" className="form-label">
+              <label htmlFor="className" className="form-label">
                 Class:
               </label>
               <select
-                name="studentClassName"
+                name="className"
                 type="text"
-                values={studentClassName}
+                values={className}
                 className="form-select"
                 onChange={handleChange}
                 defaultValue=""

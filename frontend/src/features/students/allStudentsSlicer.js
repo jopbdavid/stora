@@ -28,8 +28,8 @@ export const getAllStudents = createAsyncThunk(
 
 export const getStudents = createAsyncThunk(
   "student/GetStudents",
-  async (ids, thunkAPI) => {
-    return getAllStudentsThunk(ids, thunkAPI);
+  async (studentsIds, thunkAPI) => {
+    return getAllStudentsThunk(studentsIds, thunkAPI);
   }
 );
 

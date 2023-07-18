@@ -69,9 +69,8 @@ const studentSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Class",
     },
-    studentClassName: {
+    className: {
       type: String,
-      required: [true, "Please provide class name"],
     },
     photo: {
       type: String,
