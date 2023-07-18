@@ -14,6 +14,7 @@ const Student = ({
   email,
   guardianName,
   guardianContact,
+  guardianEmail,
   year,
   studentClassName,
   photo,

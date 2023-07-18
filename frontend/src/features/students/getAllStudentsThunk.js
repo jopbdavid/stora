@@ -18,3 +18,10 @@ export const getAllStudentsThunk = async (_, thunkAPI) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
+
+export const getStudentsThunk = async (ids, thunkAPI) => {
+  try {
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};

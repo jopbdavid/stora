@@ -126,7 +126,7 @@ const deleteStudent = async (req, res) => {
   if (!studentToDelete) {
     throw new NotFoundError("Student not found.");
   }
-  const deleteStudent = await Student.deleteOne({ _id: id });
+  const deleteStudent = await Student.findOneAndDelete({ _id: id });
   res.status(StatusCodes.OK).json({ msg: "Student deleted." });
 };
 //________________________________________________

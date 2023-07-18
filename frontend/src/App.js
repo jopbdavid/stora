@@ -10,6 +10,7 @@ import Profile from "./pages/dashboard/Profile";
 import Stats from "./pages/dashboard/Stats";
 import Students from "./pages/dashboard/Students";
 import AddStudent from "./pages/dashboard/AddStudent";
+import SingleClass from "./pages/dashboard/SingleClass";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="grades" element={<Grades />} />
           <Route path="profile" element={<Profile />} />
           <Route path="addStudent" element={<AddStudent />} />
+          <Route path="singleClass" index element={<SingleClass />} />
         </Route>
         <Route path="landing" element={<Landing />} />
         <Route path="register" element={<Register />} />

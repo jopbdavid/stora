@@ -38,7 +38,7 @@ const initialState = {
   email: "",
   guardianName: "",
   guardianContact: null,
-  year: null,
+  guardianEmail: "",
   className: "",
   photo: "",
 };
@@ -49,6 +49,7 @@ const studentsSlicer = createSlice({
   reducers: {
     handleStudentInput: (state, action) => {
       const { name, value } = action.payload;
+
       return { ...state, [name]: value };
     },
   },
@@ -59,7 +60,10 @@ const studentsSlicer = createSlice({
       })
       .addCase(addStudent.fulfilled, (state, action) => {
         state.isLoading = false;
-        toast.success(`New class:  ${action.payload.name} `);
+        console.log(action.payload);
+        toast.success(
+          `New student:  ${action.payload.student.firstName} ${action.payload.student.LastName} `
+        );
       })
       .addCase(addStudent.rejected, (state, action) => {
         state.isLoading = false;

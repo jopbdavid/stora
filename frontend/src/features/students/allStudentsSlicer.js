@@ -26,6 +26,13 @@ export const getAllStudents = createAsyncThunk(
   }
 );
 
+export const getStudents = createAsyncThunk(
+  "student/GetStudents",
+  async (ids, thunkAPI) => {
+    return getAllStudentsThunk(ids, thunkAPI);
+  }
+);
+
 const allStudentsSlicer = createSlice({
   name: "allStudents",
   initialState,

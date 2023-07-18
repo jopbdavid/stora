@@ -1,8 +1,13 @@
 import React from "react";
 import Wrapper from "../assets/wrappers/Class";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteClass } from "../features/classes/classSlicer";
 
-const Class = ({ name, year, letter, students, teachers, classProfessor }) => {
+const Class = (item) => {
+  const dispatch = useDispatch();
+  const { _id, name, year, letter, students, teachers, classProfessor } = item;
+
   return (
     <Wrapper>
       <header>
@@ -26,16 +31,17 @@ const Class = ({ name, year, letter, students, teachers, classProfessor }) => {
           <div className="status interview">{classProfessor}</div>
         </div>
 
-        <Link to="" className="btn open-btn" onClick="">
+        <Link to="/singleClass" state={item} className="btn open-btn">
           Open Class
         </Link>
 
         <footer>
           <div className="actions">
-            <Link to="/add-job" className="btn edit-btn" onClick="">
-              Edit
-            </Link>
-            <button type="button" className="btn delete-btn" onClick="">
+            <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => dispatch(deleteClass(_id))}
+            >
               Delete
             </button>
           </div>

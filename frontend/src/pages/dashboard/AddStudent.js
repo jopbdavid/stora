@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import Wrapper from "../../assets/wrappers/addStudentForm";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { addStudent } from "../../features/students/studentsSlicer";
 import { handleStudentInput } from "../../features/students/studentsSlicer";
 import { getAllClasses } from "../../features/classes/allClassesSlicer";
+import { Link } from "react-router-dom";
 
 const AddStudent = () => {
   const {
@@ -21,6 +22,7 @@ const AddStudent = () => {
     year,
     studentClassName,
     photo,
+    guardianEmail,
   } = useSelector((store) => store.students);
 
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const AddStudent = () => {
     dispatch(getAllClasses());
   }, []);
   const { classes } = useSelector((store) => store.allClasses);
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -39,15 +42,38 @@ const AddStudent = () => {
   const handleClear = () => {};
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!year || !firstName || !lastName) {
+    if (
+      !dateOfBirth ||
+      !firstName ||
+      !lastName ||
+      !gender ||
+      !address ||
+      !email ||
+      !guardianContact ||
+      !guardianEmail ||
+      !guardianName ||
+      !studentClassName
+    ) {
       toast.error("Please fill out all the fields");
       return;
     }
-    dispatch();
+    const newStudent = {
+      firstName,
+      lastName,
+      dateOfBirth,
+      gender,
+      address,
+      email,
+      guardianContact,
+      guardianEmail,
+      guardianName,
+      studentClassName,
+    };
+    dispatch(addStudent(newStudent));
   };
   return (
     <>
-      <Link to="/student" className="btn btn-hero">
+      <Link to="/students" className="btn btn-hero">
         Back to students
       </Link>
       <Wrapper>
@@ -125,8 +151,7 @@ const AddStudent = () => {
                 <option value="female">Female</option>
               </select>
             </div>
-
-            <div className="form-row">
+            {/* <div className="form-row">
               <label htmlFor="year" className="form-label">
                 Year:
               </label>
@@ -145,7 +170,7 @@ const AddStudent = () => {
                 <option value={8}>8º grade</option>
                 <option value={9}>9º grade</option>
               </select>
-            </div>
+            </div> */}
             <div className="form-row">
               <label htmlFor="address" className="form-label">
                 Address:
@@ -170,9 +195,14 @@ const AddStudent = () => {
                 className="form-input"
               />
             </div>
+          </div>
+          <br />
+
+          <h5>Guardian:</h5>
+          <div className="form-center">
             <div className="form-row">
               <label htmlFor="guardianName" className="form-label">
-                Guardian Name:
+                Name:
               </label>
               <input
                 type="text"
@@ -184,7 +214,7 @@ const AddStudent = () => {
             </div>
             <div className="form-row">
               <label htmlFor="guardianContact" className="form-label">
-                Guardian Contact:
+                Contact:
               </label>
               <input
                 type="text"
@@ -194,25 +224,38 @@ const AddStudent = () => {
                 className="form-input"
               />
             </div>
+            <div className="form-row">
+              <label htmlFor="guardianEmail" className="form-label">
+                Email:
+              </label>
+              <input
+                type="email"
+                name="guardianEmail"
+                values={guardianEmail}
+                onChange={handleChange}
+                className="form-input"
+              />
+            </div>
+          </div>
+          <br />
+          <div className="btn-container">
+            <button
+              className="btn btn-block clear-btn"
+              type="button"
+              onClick={handleClear}
+            >
+              Clear
+            </button>
+            <button
+              className="btn btn-block submit-btn"
+              type="submit"
+              disabled={isLoading}
+            >
+              {!isLoading ? "Submit" : "Loading..."}
+            </button>
           </div>
         </form>
         <br />
-        <div className="btn-container">
-          <button
-            className="btn btn-block clear-btn"
-            type="button"
-            onClick={handleClear}
-          >
-            Clear
-          </button>
-          <button
-            className="btn btn-block submit-btn"
-            type="submit"
-            disabled={isLoading}
-          >
-            {!isLoading ? "Submit" : "Loading..."}
-          </button>
-        </div>
       </Wrapper>
     </>
   );

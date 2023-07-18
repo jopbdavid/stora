@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addClass } from "../features/classes/classSlicer";
 import { handleClassInput } from "../features/classes/classSlicer";
+import { getAllClasses } from "../features/classes/allClassesSlicer";
 
 const AddClass = () => {
   const { isLoading, isEditing, name, year, classProfessor, students, letter } =

@@ -18,8 +18,8 @@ export const editClass = createAsyncThunk(
 
 export const deleteClass = createAsyncThunk(
   "class/deleteClass",
-  async (classData, thunkAPI) => {
-    return deleteClassThunk("/class", classData, thunkAPI);
+  async (id, thunkAPI) => {
+    return deleteClassThunk("/class", id, thunkAPI);
   }
 );
 
@@ -47,8 +47,8 @@ const classSlicer = createSlice({
         state.isLoading = true;
       })
       .addCase(addClass.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.isLoading = false;
+
         toast.success(`New class:  ${action.payload.newClass.name} `);
       })
       .addCase(addClass.rejected, (state, action) => {
@@ -58,7 +58,7 @@ const classSlicer = createSlice({
       })
       .addCase(deleteClass.pending, (state) => {})
       .addCase(deleteClass.fulfilled, (state, { payload }) => {
-        toast.success(payload);
+        toast.success(payload.data.msg);
       })
       .addCase(deleteClass.rejected, (state, action) => {
         toast.error(action.payload);

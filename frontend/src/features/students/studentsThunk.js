@@ -4,6 +4,7 @@ export const addStudentThunk = async (url, studentData, thunkAPI) => {
   try {
     const { data } = await customFetch.post(url, studentData);
     console.log(data);
+    return data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
