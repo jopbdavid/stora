@@ -19,7 +19,7 @@ const StudentContainer = () => {
     return <Loading center />;
   }
 
-  if (students.length < 1) {
+  if (students?.length < 1) {
     return (
       <Wrapper>
         <h2>No Students available...</h2>

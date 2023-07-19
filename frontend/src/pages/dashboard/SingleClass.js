@@ -10,11 +10,8 @@ const SingleClass = () => {
 
   const dispatch = useDispatch();
   const location = useLocation();
-  console.log(location);
   const item = location.state;
-
   const { name, year, letter, students, teachers, classProfessor } = item;
-  console.log(item);
 
   return (
     <>
@@ -27,7 +24,7 @@ const SingleClass = () => {
           </div>
         </header>
         <div className="content">
-          <StudentTable students={students} />
+          <StudentTable studentsIds={students} />
         </div>
       </Wrapper>
       <AddClass />

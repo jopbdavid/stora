@@ -13,6 +13,7 @@ const initialFiltersState = {
 const initialState = {
   isLoading: false,
   students: [],
+  studentsById: [],
   totalStudents: 0,
   numOfPages: 1,
   page: 1,
@@ -26,17 +27,28 @@ export const getAllStudents = createAsyncThunk(
   }
 );
 
-export const getStudents = createAsyncThunk(
-  "student/GetStudents",
-  async (studentsIds, thunkAPI) => {
-    return getAllStudentsThunk(studentsIds, thunkAPI);
-  }
-);
+//
 
 const allStudentsSlicer = createSlice({
   name: "allStudents",
   initialState,
   reducers: {
+    getStudents: (state, action) => {
+      const studentIds = action.payload.studentsIds;
+      console.log(state.students);
+      const studentList = [];
+      for (let id of studentIds) {
+        console.log(id);
+        for (let student of state.students) {
+          console.log(student._id);
+          if (student._id === id) {
+            studentList.push(student);
+          }
+        }
+      }
+      console.log(studentList);
+      state.studentsById = studentList;
+    },
     showLoading: (state) => {
       state.isLoading = true;
     },
@@ -92,5 +104,6 @@ export const {
   changePrev,
   changeNext,
   activePage,
+  getStudents,
 } = allStudentsSlicer.actions;
 export default allStudentsSlicer.reducer;

@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 
-const StudentTable = ({ studentIds }) => {
-  const [students, setStudents] = useState([]);
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  getAllStudents,
+  getStudents,
+} from "../features/students/allStudentsSlicer";
+
+const StudentTable = (studentsIds) => {
+  const { studentsById } = useSelector((store) => store.allStudents);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get("/api/students", {
-          params: { ids: students },
-        });
-        setStudents(response.data);
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-
-    fetchStudents();
-  }, [studentIds]);
+    dispatch(getAllStudents());
+    dispatch(getStudents(studentsIds));
+  }, []);
 
   return (
     <table>
@@ -29,11 +27,11 @@ const StudentTable = ({ studentIds }) => {
         </tr>
       </thead>
       <tbody>
-        {students.map((student) => (
-          <tr key={student.id}>
-            <td>{student.name}</td>
-            <td>{student.age}</td>
-            <td>{student.grade}</td>
+        {studentsById.map((student) => (
+          <tr key={student._id}>
+            <td>{student.firstName}</td>
+            <td>{student.lastName}</td>
+            <td>{student.email}</td>
           </tr>
         ))}
       </tbody>

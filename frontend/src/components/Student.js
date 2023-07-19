@@ -15,8 +15,7 @@ const Student = ({
   guardianName,
   guardianContact,
   guardianEmail,
-  year,
-  studentClassName,
+  className,
   photo,
 }) => {
   return (
@@ -37,7 +36,7 @@ const Student = ({
                 {firstName} {lastName}
               </b>
             </h5>
-            <h5>{studentClassName}</h5>
+            <h5>{className}</h5>
           </div>
         </header>
         <div className="content">
