@@ -31,3 +31,15 @@ export const updateUserThunk = async (url, user, thunkAPI) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
+
+export const getAllUsersThunk = async (_, thunkAPI) => {
+  let url = "/auth/users";
+  try {
+    const { data } = await customFetch.get(url);
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};

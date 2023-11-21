@@ -12,6 +12,7 @@ export const getAllClassesThunk = async (_, thunkAPI) => {
   let url = "/class";
   try {
     const { data } = await customFetch.get(url);
+    console.log(data);
 
     return data;
   } catch (error) {

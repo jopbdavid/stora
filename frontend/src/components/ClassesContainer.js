@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/ClassesContainer";
 import Class from "./Class";
 import { getAllClasses } from "../features/classes/allClassesSlicer";
+import { getAllUsers } from "../features/user/userSlicer";
 
 const ClassesContainer = () => {
   const { isLoading, classes, totalClasses, numOfPages, page } = useSelector(
@@ -13,6 +14,7 @@ const ClassesContainer = () => {
 
   useEffect(() => {
     dispatch(getAllClasses());
+    dispatch(getAllUsers());
   }, []);
 
   if (isLoading) {

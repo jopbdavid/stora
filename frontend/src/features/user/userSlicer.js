@@ -3,6 +3,7 @@ import {
   loginUserThunk,
   registerUserThunk,
   updateUserThunk,
+  getAllUsersThunk,
 } from "./userThunk";
 import {
   addUserToLocalStorage,
@@ -14,6 +15,7 @@ const initialState = {
   isLoading: false,
   user: getUserFromLocalStorage(),
   isSideBarOpen: false,
+  allUsers: [],
 };
 
 export const registerUser = createAsyncThunk(
@@ -34,6 +36,13 @@ export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (user, thunkAPI) => {
     return updateUserThunk("auth/updateUser", user, thunkAPI);
+  }
+);
+
+export const getAllUsers = createAsyncThunk(
+  "user/getAllUsers",
+  async (_, thunkAPI) => {
+    return getAllUsersThunk(_, thunkAPI);
   }
 );
 
@@ -72,6 +81,18 @@ const userSlicer = createSlice({
         toast.success(`Login successful: Welcome back ${state.user.name}`);
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error(action.payload);
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, { payload: users }) => {
+        console.log(users);
+        state.isLoading = false;
+        state.allUsers = users;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload);
       });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/AddClassForm";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -7,8 +7,17 @@ import { handleClassInput } from "../features/classes/classSlicer";
 import { getAllClasses } from "../features/classes/allClassesSlicer";
 
 const AddClass = () => {
-  const { isLoading, isEditing, name, year, classProfessor, students, letter } =
-    useSelector((store) => store.class);
+  const {
+    isLoading,
+    isEditing,
+    class_name,
+    year,
+    classProfessor,
+    students,
+    letter,
+  } = useSelector((store) => store.class);
+  const { allUsers } = useSelector((store) => store.user);
+  const [selectedUser, setSelectedUser] = useState("");
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -25,7 +34,9 @@ const AddClass = () => {
       toast.error("Please fill out all the fields");
       return;
     }
+
     dispatch(addClass({ year, letter, classProfessor }));
+    setSelectedUser("");
   };
   return (
     <Wrapper>
@@ -44,7 +55,7 @@ const AddClass = () => {
               onChange={handleChange}
               defaultValue=""
             >
-              <option value=""></option>
+              <option value="">Select Year</option>
               <option value={5}>5º grade</option>
               <option value={6}>6º grade</option>
               <option value={7}>7º grade</option>
@@ -65,16 +76,22 @@ const AddClass = () => {
             />
           </div>
           <div className="form-row">
-            <label htmlFor="classProfessor" className="form-label">
-              Diretor de Turma:
+            <label htmlFor="director" className="form-label">
+              Class Director:
             </label>
-            <input
-              type="text"
+            <select
               name="classProfessor"
               values={classProfessor}
+              className="form-select"
               onChange={handleChange}
-              className="form-input"
-            />
+            >
+              <option value="">Select a Teacher</option>
+              {allUsers.map((user) => (
+                <option key={user.teacher_id} value={user.email}>
+                  {user.first_name} {user.last_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="btn-container">

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 export const addClass = createAsyncThunk(
   "class/addClass",
   async (classData, thunkAPI) => {
+    console.log(classData);
     return addClassThunk("/class", classData, thunkAPI);
   }
 );
@@ -48,8 +49,9 @@ const classSlicer = createSlice({
       })
       .addCase(addClass.fulfilled, (state, action) => {
         state.isLoading = false;
+        console.log(action.payload);
 
-        toast.success(`New class:  ${action.payload.newClass.name} `);
+        toast.success(`New class:  ${action.payload.name} `);
       })
       .addCase(addClass.rejected, (state, action) => {
         state.isLoading = false;
