@@ -30,14 +30,15 @@ const addClass = async (req, res) => {
     ]);
 
     const newClass = result.rows[0];
-    console.log(newClass);
+
     res
       .status(StatusCodes.CREATED)
       .json({ id: newClass.class_id, name: newClass.class_name });
   } catch (error) {
     console.log(error);
     // Handle errors, such as if the user already exists (unique constraint violation, etc.)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    console.log(error.message);
+    res.status(StatusCodes.BAD_REQUEST).json(error.message);
   }
 };
 //________________________________________________
@@ -128,4 +129,30 @@ const getAllClasses = async (req, res) => {
 };
 //_____________________________________________________
 
-module.exports = { addClass, editClass, deleteClass, getAllClasses };
+//GET ALL CLASS CONTROLLER____________________________
+const getSingleClass = async (req, res) => {
+  const { id } = req.params;
+
+  const getSingleClassQuery = `SELECT class_id, class_name, director_id, director_name, year FROM stora_app."classes" WHERE class_id = $1`;
+  try {
+    const singleClass = await queryDb(getSingleClassQuery, [id]);
+
+    if (singleClass.rows.length === 0) {
+      throw new NotFoundError("Class not found.");
+    }
+
+    res.status(StatusCodes.OK).json({ class: singleClass.rows[0].class_name });
+  } catch (error) {
+    console.log(error);
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+  }
+};
+//_____________________________________________________
+
+module.exports = {
+  addClass,
+  editClass,
+  deleteClass,
+  getAllClasses,
+  getSingleClass,
+};

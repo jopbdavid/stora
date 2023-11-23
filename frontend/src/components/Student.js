@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/Student";
 import { Link } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import calculateAge from "../utils/age";
 import { BsTypeH3 } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import { getSingleClass } from "../features/classes/classSlicer";
+import { deleteStudent } from "../features/students/studentsSlicer";
 
 const Student = ({
-  firstName,
-  lastName,
-  dateOfBirth,
+  student_id,
+  first_name: firstName,
+  last_name: lastName,
+  date_of_birth: dateOfBirth,
   gender,
   address,
   email,
-  guardianName,
-  guardianContact,
-  guardianEmail,
-  className,
+  guardian_name,
+  guardian_contact,
+  guardian_email,
+  class_id,
   photo,
 }) => {
+  const dispatch = useDispatch();
+  const [className, setClassName] = useState("");
+
+  useEffect(() => {
+    const fetchClassName = async (class_id) => {
+      const response = await dispatch(getSingleClass(class_id));
+
+      setClassName(response.payload);
+    };
+    if (class_id) {
+      fetchClassName(class_id);
+    }
+  }, [dispatch, class_id]);
+
   return (
     <Wrapper>
       <div className="container">
@@ -69,7 +87,11 @@ const Student = ({
             <Link to="/add-job" className="btn edit-btn" onClick="">
               Edit
             </Link>
-            <button type="button" className="btn delete-btn" onClick="">
+            <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => dispatch(deleteStudent(student_id))}
+            >
               Delete
             </button>
           </div>

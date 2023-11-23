@@ -11,6 +11,7 @@ const {
 const Student = require("../models/Student");
 
 router.route("/").get(getAllStudents).post(addStudent).get(getStudentsList);
-router.route("/:id").patch(editStudent).delete(deleteStudent).get(getStudent);
+
+router.route("/:id").patch(editStudent).get(getStudent).delete(deleteStudent);
 
 module.exports = router;

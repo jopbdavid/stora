@@ -4,11 +4,13 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/StudentContainer";
 import Student from "./Student";
 import { getAllStudents } from "../features/students/allStudentsSlicer";
+import { getSingleClass } from "../features/classes/classSlicer";
 
 const StudentContainer = () => {
   const { isLoading, students, totalStudents, numOfPages, page } = useSelector(
     (store) => store.allStudents
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const StudentContainer = () => {
         </h5>
         <div className="students">
           {students.map((item) => {
-            return <Student key={item._id} {...item} />;
+            return <Student key={item.student_id} {...item} />;
           })}
         </div>
         {/* {numOfPages > 1 && <PageBtnContainer />} */}

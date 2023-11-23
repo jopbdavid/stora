@@ -5,10 +5,10 @@ const { NotFoundError, BadRequestError } = require("../errors");
 //________________________________________________
 //GET ALL STUDENTS CONTROLLER____________________________
 const getAllStudents = async (req, res) => {
-  const getAllStudentsQuery = `SELECT student_id, first_name, last_name, email, class_id FROM stora_app."students"`;
+  const getAllStudentsQuery = `SELECT * FROM stora_app."students"`;
   try {
     const students = await queryDb(getAllStudentsQuery);
-    console.log(students.rows);
+
     if (students.rows.length === 0) {
       throw new NotFoundError("No students found.");
     }
@@ -38,25 +38,47 @@ const getStudentsList = async (req, res) => {
 //________________________________________________
 //ADD STUDENT CONTROLLER____________________________
 const addStudent = async (req, res) => {
-  const { first_name, last_name, email } = req.body;
+  const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    gender,
+    address,
+    email,
+    guardianContact,
+    guardianEmail,
+    guardianName,
+    className,
+  } = req.body;
   const checkMailQuery = `SELECT first_name, email FROM stora_app."students" WHERE email = $1`;
+  const classIdQuery = `SELECT class_id FROM stora_app."classes" WHERE class_name = $1`;
   const checkMail = await queryDb(checkMailQuery, [email]);
+  const getClassId = await queryDb(classIdQuery, [className]);
+  const class_id = getClassId.rows[0].class_id;
 
   if (checkMail.rows.length > 0) {
     throw new BadRequestError("Student already exists");
   }
-  const addStudentQuery = `INSERT INTO stora_app."students"(first_name, last_name, email) VALUES($1, $2, $3) RETURNING *`;
+  const addStudentQuery = `INSERT INTO stora_app."students"(first_name, last_name, date_of_birth, guardian_name, guardian_contact, guardian_email, class_id, gender, address, email) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
   try {
     const student = await queryDb(addStudentQuery, [
-      first_name,
-      last_name,
+      firstName,
+      lastName,
+      dateOfBirth,
+      guardianName,
+      guardianContact,
+      guardianEmail,
+      class_id,
+      gender,
+      address,
       email,
     ]);
 
     res.status(StatusCodes.CREATED).json({
       student: {
-        Name: student.rows[0].first_name,
-        Email: student.rows[0].email,
+        firstName: student.rows[0].first_name,
+        lastName: student.rows[0].last_name,
+        email: student.rows[0].email,
       },
     });
   } catch (error) {
@@ -69,7 +91,7 @@ const addStudent = async (req, res) => {
 //________________________________________________
 //GET STUDENT CONTROLLER____________________________
 const getStudent = async (req, res) => {
-  const { email } = re.body;
+  const { email } = req.body;
   const getStudentQuery = `SELECT student_id, first_name, last_name, email, class_id FROM stora_app."students" WHERE email = $1`;
   try {
     const student = await queryDb(getStudentQuery, [email]);
@@ -88,7 +110,7 @@ const getStudent = async (req, res) => {
 //EDIT STUDENT CONTROLLER____________________________
 const editStudent = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+
   const {
     firstName,
     lastName,
@@ -127,7 +149,6 @@ const editStudent = async (req, res) => {
     }
 
     const student = await queryDb(getStudentQuery, [id]);
-    console.log(student.rows[0].email);
 
     if (student.rows.length === 0) {
       throw new NotFoundError("Student not found.");
@@ -146,7 +167,7 @@ const editStudent = async (req, res) => {
       email || student.rows[0].email,
       id,
     ]);
-    console.log(updatedStudent.rows[0]);
+
     res.status(StatusCodes.OK).json({
       student: updatedStudent.rows[0],
     });

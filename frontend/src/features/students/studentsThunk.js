@@ -1,4 +1,5 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
+import { getAllStudents } from "./allStudentsSlicer";
 
 export const addStudentThunk = async (url, studentData, thunkAPI) => {
   try {
@@ -10,9 +11,10 @@ export const addStudentThunk = async (url, studentData, thunkAPI) => {
   }
 };
 
-export const deleteStudentThunk = async (url, thunkAPI) => {
+export const deleteStudentThunk = async (url, id, thunkAPI) => {
   try {
-    const data = await customFetch.delete(url);
+    const data = await customFetch.delete(`${url}/${id}`);
+    thunkAPI.dispatch(getAllStudents());
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }

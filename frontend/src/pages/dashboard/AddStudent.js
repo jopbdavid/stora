@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import Wrapper from "../../assets/wrappers/addStudentForm";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { addStudent } from "../../features/students/studentsSlicer";
+import { addStudent, resetForm } from "../../features/students/studentsSlicer";
 import { handleStudentInput } from "../../features/students/studentsSlicer";
 import { getAllClasses } from "../../features/classes/allClassesSlicer";
 import { Link } from "react-router-dom";
+import { getAllStudents } from "../../features/students/allStudentsSlicer";
 
 const AddStudent = () => {
   const {
@@ -69,7 +70,9 @@ const AddStudent = () => {
       className,
     };
     dispatch(addStudent(newStudent));
+    dispatch(resetForm());
   };
+
   return (
     <>
       <Link to="/students" className="btn btn-hero">
@@ -86,7 +89,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="firstName"
-                values={firstName}
+                value={firstName}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -98,7 +101,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="lastName"
-                values={lastName}
+                value={lastName}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -110,14 +113,17 @@ const AddStudent = () => {
               <select
                 name="className"
                 type="text"
-                values={className}
+                value={className}
                 className="form-select"
                 onChange={handleChange}
-                defaultValue=""
               >
                 <option value="">Please Select a Class</option>
                 {classes.map((item) => {
-                  return <option value={item.name}>{item.name}</option>;
+                  return (
+                    <option key={item.class_id} value={item.class_name}>
+                      {item.class_name}
+                    </option>
+                  );
                 })}
               </select>
             </div>
@@ -128,7 +134,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="dateOfBirth"
-                values={dateOfBirth}
+                value={dateOfBirth}
                 onChange={handleChange}
                 className="form-input"
                 defaultValue="dd / mm / yyyy"
@@ -141,7 +147,7 @@ const AddStudent = () => {
               <select
                 name="gender"
                 type="text"
-                values={gender}
+                value={gender}
                 className="form-select"
                 onChange={handleChange}
               >
@@ -177,7 +183,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="address"
-                values={address}
+                value={address}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -189,7 +195,7 @@ const AddStudent = () => {
               <input
                 type="email"
                 name="email"
-                values={email}
+                value={email}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -206,7 +212,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="guardianName"
-                values={guardianName}
+                value={guardianName}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -218,7 +224,7 @@ const AddStudent = () => {
               <input
                 type="text"
                 name="guardianContact"
-                values={guardianContact}
+                value={guardianContact}
                 onChange={handleChange}
                 className="form-input"
               />
@@ -230,7 +236,7 @@ const AddStudent = () => {
               <input
                 type="email"
                 name="guardianEmail"
-                values={guardianEmail}
+                value={guardianEmail}
                 onChange={handleChange}
                 className="form-input"
               />

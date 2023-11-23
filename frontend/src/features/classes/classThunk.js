@@ -5,6 +5,7 @@ export const addClassThunk = async (url, classData, thunkAPI) => {
   try {
     const { data } = await customFetch.post(url, classData);
     thunkAPI.dispatch(getAllClasses());
+
     return data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
@@ -26,6 +27,16 @@ export const editClassThunk = async (url, classData, thunkAPI) => {
     const data = await customFetch.patch(url, classData);
 
     return data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const getSingleClassThunk = async (url, id, thunkAPI) => {
+  try {
+    const data = await customFetch.get(`${url}/${id}`);
+
+    return data.data.class;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }

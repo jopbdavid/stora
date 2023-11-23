@@ -22,8 +22,8 @@ export const editStudent = createAsyncThunk(
 
 export const deleteStudent = createAsyncThunk(
   "student/deleteStudent",
-  async (studentData, thunkAPI) => {
-    return deleteStudentThunk("/student", studentData, thunkAPI);
+  async (id, thunkAPI) => {
+    return deleteStudentThunk("/student", id, thunkAPI);
   }
 );
 
@@ -52,6 +52,15 @@ const studentsSlicer = createSlice({
 
       return { ...state, [name]: value };
     },
+    resetForm: (state) => {
+      return initialState;
+    },
+    toggleEditMode: (state) => {
+      return {
+        ...state,
+        isEditing: !state.isEditing,
+      };
+    },
   },
   extraReducers: (builder) =>
     builder
@@ -60,14 +69,15 @@ const studentsSlicer = createSlice({
       })
       .addCase(addStudent.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
+
         toast.success(
-          `New student:  ${action.payload.student.firstName} ${action.payload.student.LastName} `
+          `New student:  ${action.payload.student.firstName} ${action.payload.student.lastName} `
         );
       })
       .addCase(addStudent.rejected, (state, action) => {
         state.isLoading = false;
-        toast.error(action.payload);
+
+        toast.error(action.payload.error);
       })
       .addCase(deleteStudent.pending, (state) => {})
       .addCase(deleteStudent.fulfilled, (state, { payload }) => {
@@ -88,5 +98,5 @@ const studentsSlicer = createSlice({
       }),
 });
 
-export const { handleStudentInput } = studentsSlicer.actions;
+export const { handleStudentInput, resetForm } = studentsSlicer.actions;
 export default studentsSlicer.reducer;
