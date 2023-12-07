@@ -2,8 +2,8 @@ import axios from "axios";
 import { getUserFromLocalStorage } from "./localStorage";
 
 const customFetch = axios.create({
-  // baseURL: "https://stora.onrender.com/api/v1",
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: "https://stora.onrender.com/api/v1",
+  // baseURL: "http://localhost:8080/api/v1",
 });
 
 export const checkForUnauthorizedResponse = (error, thunkAPI) => {
