@@ -64,7 +64,7 @@ const userSlicer = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         addUserToLocalStorage(action.payload);
-        toast.success(`New user: Welcome ${action.payload.name}`);
+        toast.success(`New user: Welcome ${action.payload.firstName}`);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -78,7 +78,7 @@ const userSlicer = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         addUserToLocalStorage(action.payload);
-        toast.success(`Login successful: Welcome back ${state.user.name}`);
+        toast.success(`Login successful: Welcome back ${action.payload.name}`);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

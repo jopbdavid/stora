@@ -41,6 +41,7 @@ const login = async (req, res) => {
     if (result.rows.length === 0) {
       throw new NotFoundError("Invalid email or password");
     }
+    console.log(result.rows[0]);
     console.log(result.rows[0].password, password);
     const validatePassword = await bcrypt.compare(
       password,
@@ -50,9 +51,10 @@ const login = async (req, res) => {
       throw new UnauthenticatedError("Invalid email or password");
     }
 
-    res
-      .status(StatusCodes.OK)
-      .json({ msg: "Login successful, welcome " + result.rows[0].first_name });
+    res.status(StatusCodes.OK).json({
+      name: result.rows[0].first_name,
+      email: result.rows[0].email,
+    });
   } catch (error) {
     console.log(error);
     // Handle errors, such as if the user already exists (unique constraint violation, etc.)
